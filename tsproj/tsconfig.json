@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "module": "none",
+        "target": "es5",
+        "outFile": "../client_www/sf_techtest.js",
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "alwaysStrict":true,
+        "noImplicitReturns": true,
+        "sourceMap": false
+    },
+
+    "files": [
+      "framework/Vector2.ts",
+      "framework/InputManager.ts",
+      "framework/AssetManager.ts",
+      "framework/Application.ts",
+      "framework/RenderManager.ts",
+      "game/GameBoard.ts",
+      "game/TetriminoData.ts",
+      "game/TetriminoInstance.ts",
+      "game/Tetris.ts",
+      "main.ts"
+    ]
+}

@@ -1,16 +1,31 @@
+ 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Storm Flag Tech Test</title>
+    <link rel="stylesheet" href="infobox.css" />
   </head>
 
   <body>
      <center>
+  
        <canvas style="background-color:black" id="mainCanvas" width="720" height="640"></canvas>
        <div id="GameOver" hidden style="position: relative; top:-320px; color:red; z-index:10"><font size="48">Game Over!</font></div><br>
        <script type="text/javascript" src="sf_techtest.js"></script>
        <span>(c) Storm Flag, Inc., 2017. All Rights Reserved</span>
+
+       <div id="game-container">
+        <canvas id="game-board"></canvas>
+        <div id="info-box">
+          <h3>Next Piece</h3>
+          <canvas id="next-piece" width="80" height="80" style="border: 1px solid white;"></canvas>
+          <h3>Score</h3>
+          <p id="score">0</p>
+        </div>
+        
+      </div>
+      
      </center>
   </body>
 </html>

@@ -13,6 +13,8 @@ namespace SFGame
     /**Callback that is invoked when the death condition occurs. */
     private m_onDeath : ()=>void;
 
+    
+
     public constructor(i_dims:SFTT.IReadOnlyVector2, i_onDeath:()=>void)
     {
       this.m_onDeath = i_onDeath;
@@ -83,26 +85,56 @@ namespace SFGame
       this.destroyCompleteRows();
     }
 
-    private destroyCompleteRows()
-    {
-      let cursor = new SFTT.Vector2();
-      //walk from top to bottom of board, testing for any complete rows to destroy.
-      for( cursor.y = 0 ; cursor.y < this.m_dims.y ; cursor.y++ )
-      {
-        let complete = true;
-        for( cursor.x = 0 ; cursor.x < this.m_dims.x ; cursor.x++ )
-        {
-          if( !this.getBlock(cursor) ) { complete=false; break; } 
-        }
+    // private destroyCompleteRows()
+    // {
+    //   let cursor = new SFTT.Vector2();
+    //   //walk from top to bottom of board, testing for any complete rows to destroy.
+    //   for( cursor.y = 0 ; cursor.y < this.m_dims.y ; cursor.y++ )
+    //   {
+    //     let complete = true;
+    //     for( cursor.x = 0 ; cursor.x < this.m_dims.x ; cursor.x++ )
+    //     {
+    //       if( !this.getBlock(cursor) ) { complete=false; break; } 
+    //     }
 
-        if( complete )
-        {
-          //delete this row. 
-          this.m_data.splice( cursor.y*this.m_dims.x, this.m_dims.x );
-          for( let i= 0 ; i < this.m_dims.x ; i++ ) { this.m_data.unshift(null); } //add an empty row at the top. 
+    //     if( complete )
+    //     {
+    //       //delete this row. 
+    //       this.m_data.splice( cursor.y*this.m_dims.x, this.m_dims.x );
+    //       for( let i= 0 ; i < this.m_dims.x ; i++ ) { this.m_data.unshift(null); } //add an empty row at the top. 
+    //     }
+    //   }
+    // }
+
+    private destroyCompleteRows() {
+      let cursor = new SFTT.Vector2();
+      let rowsCleared = 0; // Track the number of cleared rows
+    
+      for (cursor.y = 0; cursor.y < this.m_dims.y; cursor.y++) {
+        let complete = true;
+        for (cursor.x = 0; cursor.x < this.m_dims.x; cursor.x++) {
+          if (!this.getBlock(cursor)) {
+            complete = false;
+            break;
+          }
+        }
+    
+        if (complete) {
+          // Clear the row
+          this.m_data.splice(cursor.y * this.m_dims.x, this.m_dims.x);
+          for (let i = 0; i < this.m_dims.x; i++) {
+            this.m_data.unshift(null); // Add an empty row at the top
+          }
+          rowsCleared++;
         }
       }
+    
+      // Add to the score if any rows were cleared
+      if (rowsCleared > 0) {
+        GameManager.addScore(rowsCleared);
+      }
     }
+    
 
     public render()
     {

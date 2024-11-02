@@ -9,10 +9,10 @@ namespace SFGame
     Last=LeftEl
   }
 
-  export function getRandomTetrimino() : TetriminoType
-  {
-    return Math.floor((1+TetriminoType.Last-TetriminoType.First)*Math.random()) + TetriminoType.First;
-  }
+  // export function getRandomTetrimino() : TetriminoType
+  // {
+  //   return Math.floor((1+TetriminoType.Last-TetriminoType.First)*Math.random()) + TetriminoType.First;
+  // }
 
   /**This class represents the data for a single tetrimino.  It can represent any of the seven tetriminos. 
    * It is the source data for TetriminoInstance, which is the actual runtime object.  */
@@ -23,6 +23,12 @@ namespace SFGame
     private m_type : TetriminoType
     private m_color : string;
 
+
+    private static m_tetriminoOrder: Array<TetriminoType> = [];
+    private static m_currentIndex: number = 0;
+    private static m_currentIndexToDisplayNextPiece: number = 1;
+    
+
     public get NumTiles() : number { return this.m_tiles.length; }
 
     public get Color() : string { return this.m_color; }
@@ -32,6 +38,45 @@ namespace SFGame
       this.m_tiles = [];
       this.m_type = TetriminoType.Undef;
       this.m_color = null;
+    }
+
+    public static initializeTetriminoOrder(): void {
+      // Generate a new order of tetriminos only once at the start
+      if (this.m_tetriminoOrder.length === 0) {
+        this.m_tetriminoOrder = [
+          TetriminoType.Line,
+          TetriminoType.Block,
+          TetriminoType.LeftSkew,
+          TetriminoType.RightSkew,
+          TetriminoType.Pointy,
+          TetriminoType.LeftEl,
+          TetriminoType.RightEl
+        ];
+
+      }
+
+      this.m_tetriminoOrder.sort(() => Math.random() - 0.5);
+    }
+
+    public static getNextTetrimino(): TetriminoType {
+      if (this.m_currentIndex >= this.m_tetriminoOrder.length) {
+        // Reset the order and shuffle again when all tetriminos have been used
+        this.m_currentIndex = 0;
+        this.initializeTetriminoOrder(); // Reshuffle
+
+       
+      }
+      return this.m_tetriminoOrder[this.m_currentIndex++];
+    }
+
+    public static showNextTetrimino(): TetriminoType {
+      
+      if (this.m_currentIndexToDisplayNextPiece >= this.m_tetriminoOrder.length) {
+        // Reset the order and shuffle again when all tetriminos have been used
+        this.m_currentIndexToDisplayNextPiece = 1;
+        this.initializeTetriminoOrder(); //Reshuffle
+      }
+      return this.m_tetriminoOrder[this.m_currentIndexToDisplayNextPiece++];
     }
 
     public static create(i_type:TetriminoType) : TetriminoData

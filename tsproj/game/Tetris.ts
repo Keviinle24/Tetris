@@ -14,6 +14,8 @@ namespace SFGame
     //position of the board in canvas pixels, from the top left of the canvas.
     public static readonly BOARD_POS : SFTT.IReadOnlyVector2 = SFTT.Vector2.create(200,0);
 
+    
+
     public get Board() : GameBoard { return this.m_gameBoard; }
 
     private m_activeBlock : TetriminoInstance;
@@ -21,6 +23,7 @@ namespace SFGame
     private m_gameBoard : GameBoard;
 
     private m_isDead : boolean;
+    
 
     /**Converts a position in tile coordinates to one in canvas coordinates. conversion in place. */
     public static tile2canvas(io_pos:SFTT.Vector2 ) : SFTT.Vector2
@@ -64,26 +67,43 @@ namespace SFGame
       if( !this.m_isDead ) { this.doActiveBlockUpdate(); }
     }
 
-    private doActiveBlockUpdate()
-    {
-      if( this.m_activeBlock === null )
-      {
-        //spawn a new one at the top. 
-        this.m_activeBlock = new TetriminoInstance( getRandomTetrimino() );
+    private doActiveBlockUpdate() {
+      if (this.m_activeBlock === null) {
+          // Spawn a new one at the top
+          const newTetrimino = new TetriminoInstance(TetriminoData.getNextTetrimino());
+          const nextTetrimino = new TetriminoInstance(TetriminoData.showNextTetrimino());
+          Tetris.renderNextPiece(nextTetrimino); // Render the next piece
+          this.m_activeBlock = newTetrimino;
       }
- 
+  
       this.m_activeBlock.render();
       this.m_activeBlock.update();
       let new_pos = this.m_gameBoard.checkCollision(this.m_activeBlock);
-      if( new_pos )
-      {
-        //block was pushed around by a collision! Since this happened as part of a fall, it means the 
-        //block has hit something and is now frozen. 
-        this.m_activeBlock.setPos(new_pos);
-        this.m_gameBoard.addTetrimino(this.m_activeBlock);
-        this.m_activeBlock = null;
+      if (new_pos) {
+          // Block was pushed around by a collision! Freeze it.
+          this.m_activeBlock.setPos(new_pos);
+          this.m_gameBoard.addTetrimino(this.m_activeBlock);
+          this.m_activeBlock = null;
       }
-    }
+  }
+  
+
+    private static renderNextPiece(tetrimino: TetriminoInstance) {
+      const nextPieceCanvas = document.getElementById("next-piece") as HTMLCanvasElement;
+      const context = nextPieceCanvas.getContext("2d");
+      
+      if (context) {
+          context.clearRect(0, 0, nextPieceCanvas.width, nextPieceCanvas.height);
+          
+          tetrimino.Tiles.forEach(tile => {
+              const x = 35 + tile.x * 10; // Adjust as needed for sizing
+              const y = 35 +  tile.y * 10; // Adjust as needed for sizing
+              context.fillStyle = tetrimino.Source.Color;
+              context.fillRect(x, y, 10, 10); // 10 is tile size for next piece preview
+          });
+      }
+  }
+  
 
     public onKeyPress(i_key:SFTT.GameKeys)
     {

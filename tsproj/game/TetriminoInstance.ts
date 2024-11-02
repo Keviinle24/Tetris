@@ -132,22 +132,6 @@
       }
     }
 
-    private static renderNextPiece(tetrimino: TetriminoInstance) {
-      const nextPieceCanvas = document.getElementById("next-piece") as HTMLCanvasElement;
-      const context = nextPieceCanvas.getContext("2d");
-      
-      if (context) {
-        context.clearRect(0, 0, nextPieceCanvas.width, nextPieceCanvas.height);
-        
-        tetrimino.Tiles.forEach(tile => {
-          // Adjust these values based on how large you want to render the next piece
-          const x = tile.x * 20;
-          const y = tile.y * 20;
-          context.fillStyle = tetrimino.Source.Color;
-          context.fillRect(x, y, 20, 20); // 20 is tile size for next piece preview
-        });
-      }
-    }
     public static addScore(rowsCleared: number) {
       const speedLevel = Math.floor(this.m_globalSpeed); // Use current speed as the level (n)
       const scoreMultipliers = [0, 40, 100, 300, 1200]; // Multipliers based on lines cleared
